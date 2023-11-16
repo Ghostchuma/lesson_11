@@ -1,0 +1,43 @@
+import os
+# HW  1
+def get_directory_info(directory_name):
+    file_list = []
+    dir_list = []
+
+    try:
+        for entry in os.listdir(directory_name):
+            full_path = os.path.join(directory_name, entry)
+            if os.path.isfile(full_path):
+                file_list.append(entry)
+            elif os.path.isdir(full_path):
+                dir_list.append(entry)
+
+        return {'filenames': file_list, 'dirnames': dir_list}
+    except OSError as e:
+        print(f"Error reading directory {directory_name}: {e}")
+        return None
+
+# HW 2
+def sort_directory_info(directory_info, ascending=True):
+    sorted_info = {'filenames': sorted(directory_info['filenames'], reverse=not ascending),
+                   'dirnames': sorted(directory_info['dirnames'], reverse=not ascending)}
+    return sorted_info
+
+# HW  3
+def update_directory_info(directory_info, entry_name):
+    if '.' in entry_name:
+        directory_info['filenames'].append(entry_name)
+    else:
+        directory_info['dirnames'].append(entry_name)
+    return directory_info
+
+# HW 4
+def create_directory_structure(directory_info, base_directory):
+    for dirname in directory_info['dirnames']:
+        new_dir = os.path.join(base_directory, dirname)
+        if not os.path.exists(new_dir):
+            os.makedirs(new_dir)
+    for filename in directory_info['filenames']:
+        new_file = os.path.join(base_directory, filename)
+        if not os.path.exists(new_file):
+            open(new_file, 'w').close()
